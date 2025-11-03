@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * @author xt0fer
+ * @author stephen
  * @version 1.0.0
- * @date 5/27/21 11:02 AM
+ * @date 11/3/25s
  */
 public class Hangman {
 
