@@ -31,32 +31,29 @@ public class Hangman {
 
         try {
             scanner = new Scanner(System.in);
-            System.out.println("Welcome to Hangman");
-            Random random = new Random();
-            this.word = words.get(random.nextInt(words.size()));
+            welcome();
+            this.word = getRandomWord(words);
             int wordLength = this.word.length();
-            for (int i = 0; i < wordLength; i++) {
-                this.guess.add("_");
-            }
+
+            printGuess(wordLength);
 
             while (true) {
-                System.out.println();
-                System.out.println("Current Lives: " + Integer.toString(this.lives));
+                currentLives();
                 if (this.lives == 0) {
-                    System.out.println("The word was " + this.word);
-                    System.out.println("You lose");
+                    gameLose();
                     return;
                 }
                 System.out.print("Wrong Letters: ");
                 for (int i = 0; i < this.hints.size(); i++) {
-                    System.out.print(this.hints.get(i) + " ");
+                    printLetter(this.hints.get(i));
                 }
                 System.out.println();
                 for (int i = 0; i < this.guess.size(); i++) {
-                    System.out.print(this.guess.get(i) + " ");
+                    printLetter(this.guess.get(i));
                 }
                 if (String.join("", this.guess).equals(this.word)) {
-                    System.out.println("\nYou win");
+                    System.out.println();
+                    gameWin();
                     return;
                 }
                 System.out.println();
@@ -65,7 +62,7 @@ public class Hangman {
                 if (userInput.isEmpty()) { System.out.println(); continue; }
 
                 if (userInput == "quit" || userInput == "Quit") {
-                        System.out.println("Leaving game");
+                        leaveGame();
                         return;
                 } else if (this.word.contains(userInput)) {
                     if (userInput.length() == 1) {
@@ -74,7 +71,7 @@ public class Hangman {
                         }
                         continue;
                     } else if (userInput.length() == wordLength) {
-                        System.out.println("You Win");
+                        gameWin();
                         return;
                     }
                 } else if (userInput.length() == 0) {
@@ -83,9 +80,7 @@ public class Hangman {
                     if (userInput.length() == 1) {
                         if (Character.isLetter(userInput.charAt(0))) {
                             if (!this.hints.contains(userInput)) {
-                                this.hints.add(userInput);
-                                System.out.println("Incorrect");
-                                this.lives--;
+                                wrongGuess((userInput));
                             }
                         } else {
                             continue;
@@ -98,5 +93,48 @@ public class Hangman {
                 scanner.close();
             }
         }
+    }
+
+    private void welcome() {
+        System.out.println("Welcome to Hangman");
+    }
+
+    private String getRandomWord(ArrayList<String> words) {
+        Random random = new Random();
+        return words.get(random.nextInt(words.size()));
+    }
+
+    private void printGuess(int wordLength) {
+        for (int i = 0; i < wordLength; i++) {
+            this.guess.add("_");
+        }   
+    }
+
+    private void gameWin() {
+        System.out.println("You Win");
+    }
+
+    private void gameLose() {
+        System.out.println("The word was " + this.word);
+        System.out.println("You lose");
+    }
+
+    private void leaveGame() {
+        System.out.println("Leaving game");
+    }
+
+    private void printLetter(String letter) {
+        System.out.print(letter + " ");
+    }
+
+    private void currentLives() {
+        System.out.println();
+        System.out.println("Current Lives: " + Integer.toString(this.lives));
+    }
+
+    private void wrongGuess(String s) {
+        this.hints.add(s);
+        System.out.println("Incorrect");
+        this.lives--;
     }
 }
