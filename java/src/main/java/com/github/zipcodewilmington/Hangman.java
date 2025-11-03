@@ -11,12 +11,15 @@ import java.util.Random;
 public class Hangman {
 
     String word;
-    String guess;
+    ArrayList<String> guess;
+    ArrayList<String> hints;
     int lives;
-    int incorrect_guesses;
+    ArrayList<String> incorrect_guesses;
+
     
     public Hangman() {
-        this.incorrect_guesses = 0;
+        this.lives = 6;
+        this.guess = new ArrayList<String>();
     }
 
     public void runHangman() {
@@ -29,18 +32,43 @@ public class Hangman {
             scanner = new Scanner(System.in);
             System.out.println("Welcome to Hangman");
             Random random = new Random();
-            this.word = words.get(random.nextInt(words.size()));
+            this.word = "testing"; //words.get(random.nextInt(words.size()));
+            int wordLength = this.word.length();
+            for (int i = 0; i < wordLength; i++) {
+                this.guess.add("_");
+            }
 
             while (true) {
+                for (int i = 0; i < this.guess.size(); i++) {
+                    System.out.print(this.guess.get(i) + " ");
+                }
+                System.out.println();
+                if (this.lives == 0) {
+                    System.out.println("You lose");
+                    return;
+                }
                 System.out.print("> ");
                 String userInput = scanner.nextLine().trim();
                 if (userInput.isEmpty()) { System.out.println(); continue; }
 
-                switch (userInput) {
-                    case "quit" -> {
+                if (userInput == "quit" || userInput == "Quit") {
                         System.out.println("Leaving game");
                         return;
+                } else if (this.word.contains(userInput)) {
+                    if (userInput.length() == 1) {
+                        for (int i = this.word.indexOf(userInput); i >= 0; i = this.word.indexOf(userInput, i + 1)) {
+                            this.guess.set(i, userInput);
+                        }
+                        continue;
+                    } else if (userInput.length() == wordLength) {
+                        System.out.println("You Win");
+                        return;
                     }
+                } else if (userInput.length() == 0) {
+                    continue;
+                } else {
+                    System.out.println("Incorrect");
+                    this.lives--;
                 }
             }
         } finally {
